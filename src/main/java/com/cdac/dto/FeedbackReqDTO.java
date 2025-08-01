@@ -18,6 +18,10 @@ public class FeedbackReqDTO {
 
     @NotNull(message = "User ID is required")
     private Long userId;
+    
+    @NotNull(message = "Booking ID is required")
+    private Long bookingId;
+    
 
     @NotBlank(message = "Comments are required")
     @Size(max = 1000, message = "Comments can't exceed 1000 characters")

@@ -49,8 +49,11 @@ public class Booking extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private BookingStatus status; // e.g., REQUESTED, CONFIRMED, CANCELLED, COMPLETED
+    private BookingStatus bookingStatus; // e.g., REQUESTED, CONFIRMED, CANCELLED, COMPLETED
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "emergency_type", nullable = false, length = 30)
+    private EmergencyType emergencyType;
 
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Bill bill;
