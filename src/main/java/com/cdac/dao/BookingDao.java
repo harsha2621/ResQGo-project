@@ -12,7 +12,8 @@ import com.cdac.entities.User;
 @Repository
 public interface BookingDao extends JpaRepository<Booking, Long>{
 
-	boolean existsByUserAndAmbulanceAndPickupLocationAndDropLocationAndBookingStatus(User user, Ambulance ambulance,
-			Location pickupLocation, Location dropLocation, BookingStatus bookingStatus);
+	boolean existsByUserAndAmbulanceAndPickupLocationAndDropLocation(User user, Ambulance ambulance,
+			Location pickupLocation, Location dropLocation);
 
+	
 }

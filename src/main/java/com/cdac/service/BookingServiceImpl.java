@@ -48,12 +48,12 @@ public class BookingServiceImpl implements BookingService {
         Location dropLocation = locationDao.findById(request.getDropoffLocationId())
                 .orElseThrow(() -> new ResourceNotFoundException("Dropoff location not found"));
 
-        boolean exists = bookingDao.existsByUserAndAmbulanceAndPickupLocationAndDropLocationAndBookingStatus(
-                user, ambulance, pickupLocation, dropLocation, request.getBookingStatus());
+        boolean exists = bookingDao.existsByUserAndAmbulanceAndPickupLocationAndDropLocation(
+        	    user, ambulance, pickupLocation, dropLocation);
+        	if (exists) {
+        	    throw new IllegalStateException("Booking already exists with these details");
+        	}
 
-        if (exists) {
-            throw new IllegalStateException("Booking already exists with these details");
-        }
 
         Booking booking = new Booking();
         booking.setUser(user);

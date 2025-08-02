@@ -3,6 +3,8 @@ package com.cdac.entities;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,10 +42,12 @@ public class Organization extends BaseEntity {
     @Column(name = "registered_at", nullable = false)
     private LocalDateTime registeredAt;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = true)
     private User admin;
 
+    
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
     private List<Ambulance> ambulances;
 

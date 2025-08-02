@@ -1,9 +1,15 @@
 package com.cdac.entities;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,6 +30,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+
 public class User extends BaseEntity {
 
     @Column(name = "full_name",length = 50, nullable = false)
@@ -48,6 +56,7 @@ public class User extends BaseEntity {
     @Column(name = "user_role", nullable = false)
     private UserRole role; // USER or ADMIN
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id",nullable = true, foreignKey = @ForeignKey(name = "fk_user_organization"))
     private Organization organization;
@@ -57,5 +66,7 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Feedback> feedbacks;
+    
+
     
 }
