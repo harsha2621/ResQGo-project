@@ -35,6 +35,4 @@ public class OrganizationReqDTO {
     @PastOrPresent(message = "Registered time cannot be in the future")
     private LocalDateTime registeredAt;
 
-    @NotNull(message = "Admin user ID is required")
-    private Long adminId;
 }

@@ -1,8 +1,6 @@
 package com.cdac.security;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,7 +9,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,27 +30,39 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.disable()) // Enable later properly
-                .authorizeHttpRequests(auth -> auth
-                		.requestMatchers(
-                			    "/swagger-ui/**",
-                			    "/swagger-resources/**",
-                			    "/v3/api-docs/**",
-                			    "/swagger-ui.html",
-                			    "/swagger-ui/index.html"
-                			).permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user/**").hasRole("USER")
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.disable()) // or properly enable later
+            .authorizeHttpRequests(auth -> auth
+                // Allow Swagger
+                .requestMatchers(
+                    "/swagger-ui/**", "/swagger-resources/**",
+                    "/v3/api-docs/**", "/swagger-ui.html"
+                ).permitAll()
+
+                // Allow login
+                .requestMatchers("/api/auth/**").permitAll()
+
+                // Allow creating first organization/user
+                .requestMatchers("/api/organization/**").permitAll()
+                .requestMatchers("/api/users/**").permitAll()
+
+                // Allow feedback creation (public)
+                .requestMatchers("/api/feedback/**").permitAll()
+
+                // Role-based access
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/user/**").hasRole("USER")
+                .requestMatchers("/api/driver/**").hasRole("DRIVER")
+
+                .anyRequest().authenticated()
+            )
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authenticationProvider(authProvider())
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     @Bean
     public AuthenticationProvider authProvider() {

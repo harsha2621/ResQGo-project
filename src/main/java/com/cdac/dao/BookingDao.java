@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.cdac.entities.Ambulance;
 import com.cdac.entities.Booking;
-import com.cdac.entities.BookingStatus;
 import com.cdac.entities.Location;
 import com.cdac.entities.User;
 

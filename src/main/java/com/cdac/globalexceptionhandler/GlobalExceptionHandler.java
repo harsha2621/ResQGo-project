@@ -21,6 +21,7 @@ import com.cdac.exception.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
+//marks a class as a global exception handler
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

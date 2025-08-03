@@ -15,7 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/ambulances")
+@RequestMapping("/api/ambulances")
 @RequiredArgsConstructor
 @Validated
 public class AmbulanceController {

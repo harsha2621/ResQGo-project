@@ -27,12 +27,15 @@ public  class BaseEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    
+    //The method annotated with @PrePersist is called right before the entity is saved (persisted) for the first time in the database
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
 
+    //The method annotated with @PreUpdate is called right before an existing entity is updated in the database.
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();

@@ -64,3 +64,4 @@ public class Booking extends BaseEntity {
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TripStatusUpdate> statusUpdates;
 }
+

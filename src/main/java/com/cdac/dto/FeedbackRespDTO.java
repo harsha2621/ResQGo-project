@@ -13,6 +13,7 @@ public class FeedbackRespDTO {
 
     private Long id;
     private Long userId;
+    private Long bookingId; 
     private String comments;
     private Integer rating;
 }

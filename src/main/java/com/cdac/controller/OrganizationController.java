@@ -13,7 +13,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/organization")
+@RequestMapping("/api/organization")
 @AllArgsConstructor
 @Validated
 public class OrganizationController {
@@ -26,6 +26,14 @@ public class OrganizationController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(organizationService.addOrganization(dto));
     }
+    
+    @PutMapping("/{orgId}/assign-admin/{userId}")
+    @Operation(description = "Assign an admin user to an organization")
+    public ResponseEntity<?> assignAdminToOrganization(@PathVariable Long orgId, @PathVariable Long userId) {
+        organizationService.assignAdmin(orgId, userId);
+        return ResponseEntity.ok("Admin assigned successfully to organization with id " + orgId);
+    }
+
 
     @PutMapping("/{id}")
     @Operation(description = "Update an existing organization by ID")
@@ -35,6 +43,7 @@ public class OrganizationController {
     }
 
     @DeleteMapping("/{id}")
+    
     @Operation(description = "Delete an organization by ID")
     public ResponseEntity<?> deleteOrganization(@PathVariable Long id) {
         return ResponseEntity.ok(organizationService.deleteOrganization(id));

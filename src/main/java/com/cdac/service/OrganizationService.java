@@ -13,4 +13,7 @@ public interface OrganizationService {
     
     OrganizationRespDTO getOrganization(Long id);
     
+    
+    public void assignAdmin(Long orgId, Long userId);
+    
 }

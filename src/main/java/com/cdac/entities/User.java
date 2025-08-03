@@ -1,15 +1,11 @@
 package com.cdac.entities;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -46,8 +42,7 @@ public class User extends BaseEntity {
     @Column(name="aadhaar_no",length = 12, unique = true,nullable = false)
     private String aadhaarNumber;
 
-    @Column(name="license_no",length = 20,nullable = false,unique=true)
-    private String licenseNumber;
+   
 
     @Column(name="contact_no",length = 10,nullable = false)
     private String contactNumber;
@@ -58,7 +53,7 @@ public class User extends BaseEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id",nullable = true, foreignKey = @ForeignKey(name = "fk_user_organization"))
+    @JoinColumn(name = "organization_id",nullable = false, foreignKey = @ForeignKey(name = "fk_user_organization"))
     private Organization organization;
     
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)

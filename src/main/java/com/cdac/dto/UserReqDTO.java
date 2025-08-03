@@ -27,6 +27,10 @@ public class UserReqDTO {
     @Size(max = 50)
     private String email;
 
+
+    @NotNull(message = "oraganizationId ID is required")
+    private Long oraganizationId;
+    
     @NotBlank(message = "Password is required")
     @Size(min = 10, max = 60, message = "Password must be 6-20 characters")
     private String password;
@@ -35,8 +39,7 @@ public class UserReqDTO {
     @Pattern(regexp = "\\d{12}", message = "Aadhaar number must be numeric")
     private String aadhaarNumber;
 
-    @Size(max = 20, message = "License number max length is 20")
-    private String licenseNumber;
+    
 
     @Size(max = 10, message = "Contact number max length is 10")
     @Pattern(regexp = "\\d{10}", message = "Contact number must be 10 digits")

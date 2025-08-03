@@ -43,10 +43,16 @@ public class Organization extends BaseEntity {
     private LocalDateTime registeredAt;
 
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_id", nullable = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_id")
     private User admin;
+    
+    /*Use @JoinColumn only on the owning side (usually @ManyToOne).
 
+The non-owning side as inverse side
+ (@OneToMany with mappedBy) just references the owning side and does not create a column.
+
+*/
     
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
     private List<Ambulance> ambulances;

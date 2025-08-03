@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/bills")
+@RequestMapping("/api/bills")
 @AllArgsConstructor
 @Validated
 public class BillController {

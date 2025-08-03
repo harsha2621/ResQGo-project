@@ -11,6 +11,8 @@ import com.cdac.dto.OrganizationReqDTO;
 import com.cdac.dto.OrganizationRespDTO;
 import com.cdac.entities.Organization;
 import com.cdac.entities.User;
+import com.cdac.entities.UserRole;
+import com.cdac.exception.InvalidRoleException;
 import com.cdac.exception.ResourceNotFoundException;
 
 import lombok.AllArgsConstructor;
@@ -21,57 +23,80 @@ import lombok.AllArgsConstructor;
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationDao organizationDao;
-    private final UserDao userDao;
     private final ModelMapper modelMapper;
-    
-    
-    @Override
-    public OrganizationRespDTO addOrganization(OrganizationReqDTO dto) {
-        // Check if the admin user exists
-        User admin = userDao.findById(dto.getAdminId())
-                .orElseThrow(() -> new ResourceNotFoundException("Admin user not found with ID: " + dto.getAdminId()));
+    private final UserDao userDao;
 
-        // Map the DTO to entity
-        Organization organization = modelMapper.map(dto, Organization.class);
-        organization.setAdmin(admin); // manually set admin
+    
 
-        // Save and return response DTO
-        Organization saved = organizationDao.save(organization);
-        return modelMapper.map(saved, OrganizationRespDTO.class);
+    
+     @Override
+    public void assignAdmin(Long orgId, Long userId) {
+    // Find organization by id
+    Organization org = organizationDao.findById(orgId)
+            .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id: " + orgId));
+
+    // Find user by id
+    User user = userDao.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+    // Check if user has admin role
+    if (user.getRole() != UserRole.ADMIN) {
+        throw new InvalidRoleException("User is not an admin, cannot assign as organization admin");
     }
 
+    // Set admin to organization
+    org.setAdmin(user);
+
+    // Save updated organization
+    organizationDao.save(org);
+}
+    
+
+    @Override
+    public OrganizationRespDTO addOrganization(OrganizationReqDTO dto) {
+        // Map DTO to entity
+        Organization org = modelMapper.map(dto, Organization.class);
+        // Save entity
+        Organization savedOrg = organizationDao.save(org);
+        // Map entity to response DTO and return
+        return modelMapper.map(savedOrg, OrganizationRespDTO.class);
+    }
 
     @Override
     public OrganizationRespDTO updateOrganization(Long id, OrganizationReqDTO dto) {
-        // Fetch existing organization
         Organization org = organizationDao.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id: " + id));
 
-        // Check if the new admin user exists
-        User admin = userDao.findById(dto.getAdminId())
-                .orElseThrow(() -> new ResourceNotFoundException("Admin user not found with ID: " + dto.getAdminId()));
-
-        // Update fields using modelMapper (except admin)
+        // Update fields from DTO to entity (you can also map selectively)
         modelMapper.map(dto, org);
-        org.setAdmin(admin); // manually set updated admin
 
-        // Save and return updated response
-        Organization updated = organizationDao.save(org);
-        return modelMapper.map(updated, OrganizationRespDTO.class);
+        // Save updated entity
+        Organization updatedOrg = organizationDao.save(org);
+        return modelMapper.map(updatedOrg, OrganizationRespDTO.class);
     }
 
     @Override
     public ApiResponse deleteOrganization(Long id) {
         Organization org = organizationDao.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id: " + id));
+
         organizationDao.delete(org);
-        return new ApiResponse("Organization deleted successfully") ;
+        return new ApiResponse("Organization deleted successfully");
     }
 
     @Override
     public OrganizationRespDTO getOrganization(Long id) {
         Organization org = organizationDao.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id: " + id));
+
         return modelMapper.map(org, OrganizationRespDTO.class);
     }
 }
+
+
+
+
+
+
+	
+

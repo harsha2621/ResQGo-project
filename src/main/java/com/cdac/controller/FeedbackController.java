@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/feedbacks")
+@RequestMapping("/api/feedback")
 @RequiredArgsConstructor
 public class FeedbackController {
 

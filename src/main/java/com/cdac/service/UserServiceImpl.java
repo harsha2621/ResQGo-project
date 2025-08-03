@@ -7,10 +7,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cdac.dao.OrganizationDao;
 import com.cdac.dao.UserDao;
 import com.cdac.dto.ApiResponse;
 import com.cdac.dto.UserReqDTO;
 import com.cdac.dto.UserRespDTO;
+import com.cdac.entities.Organization;
 import com.cdac.entities.User;
 import com.cdac.exception.ResourceNotFoundException;
 
@@ -23,12 +25,24 @@ public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
     private final ModelMapper modelMapper;
+    private final OrganizationDao organizationDao;
 
     @Override
     public UserRespDTO addUser(UserReqDTO dto) {
+        // Step 1: Validate that the organization exists
+        Organization org = organizationDao.findById(dto.getOraganizationId())
+            .orElseThrow(() -> new ResourceNotFoundException("Organization not found"));
+
+        // Step 2: Map DTO to User
         User user = modelMapper.map(dto, User.class);
+
+        // Step 3: Manually set the organization
+        user.setOrganization(org);
+
+        // Step 4: Save and map to response DTO
         return modelMapper.map(userDao.save(user), UserRespDTO.class);
     }
+
 
     @Override
     public UserRespDTO updateUser(Long id, UserReqDTO dto) {

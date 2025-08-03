@@ -19,7 +19,7 @@ import com.cdac.service.TripStatusUpdateService;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/trip-status")
+@RequestMapping("/api/trip-status")
 @AllArgsConstructor
 public class TripStatusUpdateController {
 
